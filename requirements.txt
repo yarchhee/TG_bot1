@@ -1,0 +1,5 @@
+aiogram==3.25.0
+
+
+# pip install -r requirements.txt
+# pip install module_name
