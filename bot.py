@@ -32,7 +32,7 @@ async def process_help(message: Message):
 @dp.message(Command(commands=['dog']))
 async def answer_dog(message: Message):
     s = requests.get("https://dog.ceo/api/breeds/image/random")
-    await bot.send_photo(message.chat.id, s.content)
+    print(s.content)
 @dp.message()
 async def send_echo(message: Message):
     await message.reply(message.text)
