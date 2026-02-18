@@ -6,9 +6,9 @@ s = requests.get("https://kompege.ru/variant?kim=25154796")
 a = requests.get("https://dnevnik.edumil.ru/component/dnevnik/?controller=dnevnik&task=dnevnik")
 b = requests.get("https://kompege.ru/task")
 print(b.text)
-dict = {}
-dict['dnevnik'] = a.text
-dict['tasks'] = b.text
-dict['varik'] = s.text
+dicti = {}
+dicti['dnevnik'] = a.text
+dicti['tasks'] = b.text
+dicti['varik'] = s.text
 
 
