@@ -8,6 +8,9 @@
 
 # API = f"https://api.telegram.org/bot{bot_token}/getMe"
 
+# git checkout -b dog
+
+
 import requests
 from config import Config, load_config, TgBot
 from aiogram import Bot, Dispatcher
