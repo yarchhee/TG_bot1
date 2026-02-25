@@ -123,7 +123,7 @@ dp = Dispatcher()
 #         await message.answer("Хороший вопрос! Надо подумать...")
 #
 
-@dp.message()
+
 
 
 # async def main():
