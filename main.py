@@ -124,12 +124,31 @@ dp = Dispatcher()
 #
 
 
+# @dp.message(F.text)
+# async def moderation(message: Message):
+#     if "спам" in message.text:
+#         await message.answer("Обнаружено подозрительное сообщение!")
+#     elif "привет" in message.text:
+#         await message.answer("салам")
+#     else:
+#         await message.answer("Все чисто")
+
+# @dp.message(F.reply_to_message)
+# async def reply(message: Message):
+#     await message.answer("Вижу ты кому то отвечаешь")
+# @dp.message()
+# async def js(message: Message):
+#     await message.answer("Это сообщение в пустоту")
 
 
-# async def main():
-#     await dp.start_polling(bot)
-# if __name__ == '__main__':
-#     asyncio.run(main())
+
+
+
+
+async def main():
+    await dp.start_polling(bot)
+if __name__ == '__main__':
+    asyncio.run(main())
 
 # git clone -b название_ветки ссылка_на_проект
 # git checkout - b название_новой_ветки_hw
