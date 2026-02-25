@@ -1,16 +1,53 @@
-import requests
 import asyncio
+from mailbox import Message
+
 from config import Config, load_config, TgBot
 from aiogram import Bot, Dispatcher, F
-from aiogram.filters import Command, CommandStart, ChatMemberUpdatedFilter, KICKED, MEMBER
-from aiogram.types import Message, ChatMemberUpdated, ContentType
+from pathlib import Path
+from aiogram.types import Message, FSInputFile
 
 config: Config = load_config()
 bot_token = config.bot.token
-
 bot = Bot(token=bot_token)
-
 dp = Dispatcher()
+
+# # Домашняя папка пользователя
+# HOME_DIR = Path.home()
+# # Рабочий стол
+# DESKTOP_DIR = HOME_DIR / "Desktop"
+# # папка downloads
+# DOWNLOAD_DIR = DESKTOP_DIR / "Downloads"
+#
+# @dp.message(F.photo)
+# # bot -
+# async def download_photo(message: Message, bot: Bot):
+#     photo = message.photo[-1]
+#     file = await bot.get_file(photo.file_id)
+#     await bot.download_file(photo.file_id, DOWNLOAD_DIR)
+#
+#
+
+# @dp.message(F.text.lower() == 'дай фото')
+# async def send_photo(message: Message):
+#
+    # # нельзя отправлять текст > 4096
+    # # нельзя отправить caption > 1024
+    # photo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT81dWRAOXVmOY-FKibNvGOmyW2J2uvYTynYkUV_UFJbCWnXv-kEelBtQYp9Jnq7mMFcl9Q1KA2L8BnTtPoU_lAdn-Ipk_8EIKiOptoXiI&s=10"
+    # await message.answer_photo(photo, caption = 'Вот фотка')
+    # photo = FSInputFile("files/test1.jpg")
+    # await message.answer_photo(
+    #     photo = photo,
+    #     caption = "Вот фотка"
+    # )
+
+@dp.message(F.photo)
+async def reply_photo(message: Message):
+    photo = message.photo[-1]
+    await message.answer_photo(
+        photo = photo.file_id,
+        caption = 'Вот твоя фотка'
+    )
+
 # def my_help_filter(message: Message) -> bool:
 #     return message.text and message.text == '\help'
 #
