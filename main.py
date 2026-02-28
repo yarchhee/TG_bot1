@@ -1,7 +1,7 @@
 from config import BOT_TOKEN
 from aiogram import Bot, Dispatcher
 from asyncio import run
-from aio
+from aiogram.filters import Command
 
 bot = Bot(token = BOT_TOKEN)
 dp = Dispatcher()
