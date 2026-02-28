@@ -7,10 +7,15 @@ from aiogram.types import Message
 bot = Bot(token = BOT_TOKEN)
 dp = Dispatcher()
 
+@dp.message(Command(commands = ["start"]))
+async def start_handler(message: Message):
+    print(f"[LOG] пользователь {message.from_user.id}")
+    await message.answer("Салам")
+
 # dp.run_polling()
 async def main():
-    await dp.start_polling()
+    await dp.start_polling(bot)
 
-@dp.message(Command[commands = ["start"]])
+
 
 run(main()) # запускает цикл событий ()
