@@ -38,7 +38,7 @@ async def main():
 
     @dp.message()
     async def message_handler(message: Message):
-        print(f"[LOG] Пользователь написал какую - то ерунду")
+        print(f"[LOG] Пользователь написал какую -то ерундистику")
         await message.answer("Я тебя не понимаю")
 
 print(f"[LOG] Бот запущен")
