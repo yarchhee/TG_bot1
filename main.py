@@ -4,6 +4,7 @@ from asyncio import run
 from aiogram.filters import Command
 from aiogram.types import Message
 from requests import get
+from random import choice
 
 # dp.run_polling()
 
@@ -27,10 +28,14 @@ async def main():
 
     @dp.message(Command(commands=["breeds"]))
     async def send_breed(message: Message):
+        print(f'[LOG] Нажал /breeds')
+        print("[LOG] Запрашиваем породу кота")
         response = get("https://catfact.ninja/breeds")
+        print(f'[LOG] получен результат со статусом {response.status_code} ')
         response_json = response.json()
-        print(response_json["data"][0]["country"])
-        print(response_json["data"][0]["breed"])
+        random_item = choice([response_json["data"]])
+        await message.answer(f'Случайная порода {random_item['breed']} \nРодина: {random_item['country']}')
+
     @dp.message()
     async def message_handler(message: Message):
         print(f"[LOG] Пользователь написал какую - то ерунду")
