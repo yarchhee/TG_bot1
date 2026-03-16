@@ -49,5 +49,5 @@ async def main():
         await message.answer("Крутое фото или видео")
 
 
-print(f"[LOG] Бот запущен")
+print(f"[LOG] Бот запущен.")
 run(main()) # запускает цикл событий
