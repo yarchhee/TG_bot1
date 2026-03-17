@@ -23,7 +23,7 @@ async def main():
     #     await bot.download_file(file.file_path, destination = "files/file1.jpg")
     #     print(f"[LOG] сохранение файла {PATH}")
     #     await message.answer("Крутое фото!")
-    #
+
     # @dp.message(F.video)
     # async def get_video(message: Message, bot: Bot):
     #     print(f"[LOG] Пользователь {message.from_user.id} вызвал get_photo")
