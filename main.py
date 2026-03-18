@@ -45,6 +45,10 @@ async def main():
     #     print(f"[LOG] конец бинаризации")
     #     await message.answer_photo(photo=photo,caption="это география")
     # #     await message.answer_photo("https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/11582/production/_103424017_mary-mcgowan_caught-in-the-act_00001294.jpg.webp",caption="это белка")
+    @dp.message(Command(commands=["start"]))
+    async def start_handler(message: Message):
+        print(f"[LOG] Пользователь нажал /start")
+        await message.answer("Привет")
     @dp.message(Command(commands=["show"]))
     async def show_command(message: Message):
         msg = await message.answer("Загрузка")
@@ -62,6 +66,40 @@ async def main():
                 await msg.edit_text(f"Текущая температура на улице: {elements[1]}")
                 await asyncio.sleep(0.1)
         await msg.delete()
+
+    @dp.message(F.text.lower().contains("контакт"))
+    async def contact_handler(message: Message):
+        print(f"[LOG] Пользователь запросил контакт")
+        await message.answer ("Вот контакт")
+        await message.answer_contact(
+            phone_number="+79216112453",
+            first_name="Koshka"
+        )
+
+    @dp.message(F.text.lower().contains("адрес"))
+    async def location_handler(message: Message):
+        print(f"[LOG] Пользователь запросил адрес")
+        await message.answer("Вот тебе локация")
+        await message.answer_location(
+            latitude = 10,
+            longitude = 100
+        )
+    @dp.message()
+    async def anything(message: Message):
+        print(f"[LOG] Пользователь написал непонятно что")
+        await message.answer(message.text)
+
+        @dp.message(Command(commands=["silka"]))
+        async def silka_handler(message: Message):
+            msg = await message.answer("Загрузка...")
+            with open("task.txt", mode="r") as file:
+                s = file.readlines()
+                for i in s:
+                    num, link = i.split(" ")
+                    await asyncio.sleep(5)
+                    await msg.edit_text(f"Для ссылки {link} загружены данные")
+
+    await dp.start_polling(bot)
 print(f'[LOG] Бот запущен')
 
 

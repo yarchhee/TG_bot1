@@ -1,0 +1,4 @@
+1 https://kompege.ru/homework?kim=25163600
+2 https://kompege.ru/homework?kim=25163596
+3 https://dnevnik.edumil.ru/component/dnevnik/?controller=dnevnik&task=dnevnik
+
