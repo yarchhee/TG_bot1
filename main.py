@@ -1,53 +1,69 @@
-from config import BOT_TOKEN
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
+from aiogram.types import Message, FSInputFile
 from asyncio import run
-from aiogram.filters import Command
-from aiogram.types import Message
-from requests import get
-from random import choice
-from aiogram import F
+from config import BOT_TOKEN
 import os
-# dp.run_polling()
-
+from aiogram.filters import Command
+import asyncio
+from random import randint
 
 async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
-
-    # async def get_photo(message: Message, bot: Bot):
-    #     print(f"[LOG] Пользователь {message.from_user.id} вызвал get_photo")
-    #     photo = message.photo[-1]
-    #     file = await bot.get_file(photo.file_id)
-    #     print(f"[LOG] получение файла {file.file_unique_id}")
-    #     PATH = os.path.join("file", f"{file.file_unique_id}.jpg")
-    #     await bot.download_file(file.file_path, destination = "files/file1.jpg")
-    #     print(f"[LOG] сохранение файла {PATH}")
-    #     await message.answer("Крутое фото!")
-
-    # @dp.message(F.video)
-    # async def get_video(message: Message, bot: Bot):
-    #     print(f"[LOG] Пользователь {message.from_user.id} вызвал get_photo")
-    #     video = message.video[-1]
-    #     file = await bot.get_file(video.file_id)
-    #     print(f"[LOG] получение файла {file.file_unique_id}")
-    #     PATH = os.path.join("file", f"{file.file_unique_id}.mp4")
+    # @dp.message(F.photo | F.video | F.voice)
+    # async def get_photo_video_voice(message: Message, bot: Bot):
+    #     print(f"[LOG] Пользователь {message.from_user.id} вызвал функцию get_photo_video_voice")
+    #     os.makedirs("downloads", exist_ok=True)
+    #     if message.photo:
+    #         file = await bot.get_file(message.photo[-1].file_id)
+    #         print(f'[LOG] Файл {file.file_unique_id} получен')
+    #         PATH = os.path.join("downloads", f"{file.file_unique_id}.jpg")
+    #     elif message.voice:
+    #         file = await bot.get_file(message.voice.file_id)
+    #         PATH = os.path.join("downloads", f"{file.file_unique_id}.ogg")
+    #     else:
+    #         file = await bot.get_file(message.video.file_id)
+    #         print(f'[LOG] Файл {file.file_unique_id} получен')
+    #         PATH = os.path.join("downloads", f"{file.file_unique_id}.mp4")
+    #     print(f"[LOG] начало скачивания {file}, по пути {PATH}")
     #     await bot.download_file(file.file_path, destination=PATH)
-    #     print(f"[LOG] сохранение файла {PATH}")
-    #     await message.answer("Крутое видео!")
+    #     print(f'[LOG] Файл {PATH} сохранен в соответствующую директорию')
+    #
+    #     await message.answer("крутое фото или видео или гс")
+    # @dp.message(F.sticker)
+    # async def get_sticker(message: Message):
+    #     print(f"[LOG] пользователь {message.from_user.id} вызвал функцию get_sticker")
+    #     with open("stickers.txt", "a+") as f:
+    #         f.write(message.sticker.file_id + "\n")
+    #         print(f"[LOG] записан стикер {message.sticker.file_id}")
+    # @dp.message(F.text == "отправь фото")
+    # async def send_photo(message: Message):
+    #     print(f"[LOG] получен запрос от {message.from_user.id} в send_photo")
+    #     PATH = os.path.join("downloads","123123.jpg")
+    #     print(f"[LOG] начало бинаризации")
+    #     photo=FSInputFile(PATH)
+    #     print(f"[LOG] конец бинаризации")
+    #     await message.answer_photo(photo=photo,caption="это география")
+    # #     await message.answer_photo("https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/11582/production/_103424017_mary-mcgowan_caught-in-the-act_00001294.jpg.webp",caption="это белка")
+    @dp.message(Command(commands=["show"]))
+    async def show_command(message: Message):
+        msg = await message.answer("Загрузка")
+        with open("data.txt", mode="w") as file:
+            #randint
+            file.write("curs:temperature\n")
+            for _ in range(10):
+                file.write(f"{randint(0,1000)}:{randint(-30,30)}\n")
+        with open("data.txt",mode = "r") as file:
+            list_data = file.readlines()
+            if len(list_data) <= 1:
+                await message.answer("Нету данных в файле")
+            for i in list_data[1:]:
+                elements = i.split(":")
+                await msg.edit_text(f"Текущая температура на улице: {elements[1]}")
+                await asyncio.sleep(0.1)
+        await msg.delete()
+print(f'[LOG] Бот запущен')
 
-    @dp.message(F.photo | F.video)
-    async def get_photo(message: Message):
-        os.makedirs("downloads", exist_ok=True)
 
-        if message.photo:
-            file = await bot.get_file(message.photo[-1].file_id)
-            PATH = os.path.join("downloads", f"{file.file_unique_id}.jpg")
-        else:
-            file = await bot.get_file(message.video.file_id)
-            PATH = os.path.join("downloads", f"{file.file_unique_id}.mp4")
-        await bot.download_file(file.file_path, destination = PATH)
-        await message.answer("Крутое фото или видео")
-
-
-print(f"[LOG] Бот запущен.")
-run(main()) # запускает цикл событий
+# if name == '__main__':
+#     run(main()) # запускает цикла событий(dispatcher)

@@ -1,0 +1,2 @@
+curs:temperature
+10:20
