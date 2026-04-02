@@ -1,60 +1,110 @@
-from aiogram import Bot, Dispatcher, F
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, BotCommand, ReplyKeyboardRemove, \
-    inline_keyboard_button, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from asyncio import run
+import asyncio
+from idlelib.undo import Command
+from time import sleep
+
+from click import command
+
 from config import BOT_TOKEN
+from aiogram import Bot, Dispatcher
+from asyncio import run
+from aiogram import F
 from aiogram.filters import Command
+from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, \
+    CallbackQuery
 
-
-async def set_commands(bot):
-    commands = [
-        BotCommand(command="/start", description="Эта команда начинает бот"),
-        BotCommand(command="/help", description='Эта команда помогает'),
-        BotCommand(command='/neperejivay', description='эта команда чилит')
-    ]
-    await bot.set_my_commands(commands)
 
 async def main():
-    bot = Bot(token=BOT_TOKEN)
+    bot = Bot(token = BOT_TOKEN)
     dp = Dispatcher()
 
-    btn_1 = InlineKeyboardButton(
-        text = "Пицца",
-        callback_data="food_1"
+
+
+
+    # Проект «Опросник»
+    # Сценарий: Сбор данных о пользователе (анкета из 3-х вопросов).
+    # Твоя задача:
+    # Пользователь жмет «Начать тест». Бот присылает первый вопрос.
+    # Под вопросом кнопки с вариантами ответа
+    # После нажатия на кнопку идет переход на следующий вопрос
+    # После третьего вопроса отправляется весь тест с ответами в формате:
+    # 1 вопрос:
+    # Какой результат деления на 10
+    # ответ: {ответ человека}
+    # 2 вопрос:
+    # Какой результат деления на 10
+    # ответ: {ответ человека}
+    # 3 вопрос:
+    # Какой результат деления на 10
+    # ответ: {ответ человека}
+
+    start_test_btn = KeyboardButton(
+        text = "Начать тест"
     )
 
-    btn_2 = InlineKeyboardButton(
-        text = "Суши",
-        callback_data = "food_2"
+    menu_buttons = ReplyKeyboardMarkup(
+        keyboard = [[start_test_btn],]
     )
+    questions = [
+        {"Какое из этих семи чудес света находилось в Египте и сохранилось до наших дней?":
+             {
+                 "Пирамида Хеопса": True,
+                 "Висячие сады Семирамиды": False,
+                 "Колосс Родосский": False
+             }
+         },
+        {"Как звали французскую героиню, ставшую символом освобождения во время Столетней войны?": "Жанна д’Арк"},
+        {"Какой мореплаватель возглавил первую в истории экспедицию, совершившую кругосветное путешествие?": "Фернан Магеллан"},
+    ]
+    counter = 0
+    @dp.message(Command(commands="start"))
+    async def start_handler(message: Message):
+        await message.answer(
+            "Начинаем тест, нажмите начать тест",
+            reply_markup = menu_buttons
+        )
 
-    # btn_3 = InlineKeyboardButton(
-    #     text="Суп",
-    #     url=""
-    # )
+    @dp.message(F.text == "Начать тест")
+    async def start_test_handler(message: Message):
 
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[[btn_1, btn_2]]
-    )
+        answ = list(questions[0].keys())
+        text = list(questions[0].values())[0]
 
-    @dp.message(F.text)
-    async def text_handler(message: Message):
-        text = message.text
-        await message.answer("Вот клава", reply_markup=keyboard)
+        answ_1_btn = InlineKeyboardButton(
+            text = text,
+            callback_data = "question"
+        )
+        answ_keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[[answ_1_btn]]
+        )
 
-    @dp.callback_query(F.data.startswit('food'))
-    async def callback_handler(callback: CallbackQuery):
-        # callback.answer
-        # callback.message.answer()
-        # await callback.message.edit_text("Ваш заказ оформлен")
-        data = callback.data
-        if data == "food_1":
-            await callback.message.answer("Вам отправили пиццу")
-        if data == "food_2":
-            await callback.message.answer("Вам отправили суши")
-        print(data)
+        await message.answer(
+            answ[0],
+            reply_markup=answ_keyboard
+        )
+
+    @dp.callback_query(F.data.startswith("question"))
+    async def absw_handler(callback: CallbackQuery):
+        nonlocal counter
+        counter += 1
+
+        answ = list(questions[counter].keys())[0]
+        text = list(questions[counter].values())[0]
+        answ_1_btn = InlineKeyboardButton(
+            text = text,
+            callback_data = "question"
+        )
+        answ_keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[[answ_1_btn]]
+        )
+        await callback.message.answer(text = answ, reply_markup=answ_keyboard)
+
+        #Доделать словарь
+        #добавить кнопки (создать список перебрать варианты и добавить в него кнопки с вариантами)
+        #Сделать вывод после 3го ответа
+
 
     await dp.start_polling(bot)
-print(f'[LOG] Бот запущен')
-# if name == '__main__':
-run(main()) # запускает цикла событий(dispatcher)
+    # asyncio.sleep()
+
+print("[LOG] Бот запущен")
+run(main()) #запускает цикла событий (dp)
