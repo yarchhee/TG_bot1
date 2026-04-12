@@ -33,6 +33,7 @@ async def main():
     async def callback_handler(call: CallbackQuery):
         data = callback.data
         if data == "course_1":
+            await callback.message.answer("")
 
     await dp.start_polling(bot)
 
